@@ -1,0 +1,148 @@
+		
+    {% extends 'base2/base.html' %}
+    {% block title %}专有云v2版本{% endblock %}
+        {% block content %}
+
+        <div class="page-title">
+              <div class="title_left">
+              </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                        <h2>Add <small>通过选择项目属性确定添加项目。</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Settings 1</a>
+                                </li>
+                                <li><a href="#">Settings 2</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <br />
+                      <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name"> 云类别 <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="cloud_type_id" class="form-control" disabled="disabled" placeholder="专有云">
+                            </div>
+                      </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12"> 版本 <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select class="form-control" id="cloud_version_id">
+                                        {% for obj in version_set  %}
+                                            <option value="{{ obj.version_id }}">{{ obj.version_type }}</option>
+                                        {% endfor  %}
+                                    </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12"> 项目名称 <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" class="form-control" id="project_name" placeholder="项目名称">
+                            </div>
+                        </div>
+
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea"> 项目介绍 <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <textarea id="project_instructions" required="required" name="textarea" class="form-control col-md-7 col-xs-12" placeholder="项目介绍"></textarea>
+                            </div>
+                      </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12"> 项目开始时间 <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" class="form-control" id="project_start_date" value="" placeholder="项目开始时间">
+                            </div>
+                        </div>
+
+                        <div class="ln_solid"></div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3">
+                                    <button type="button" class="btn btn-warning"  onclick="add_project()">添加项目</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% endblock %}
+
+        {% block extrajs %}
+		<script type="text/javascript">
+
+            function add_project(){                                                                                                                                              
+                var cloud_type_id = $("#cloud_type_id").val()
+                var cloud_version_id = $("#cloud_version_id").val()
+                var project_name = $("#project_name").val()
+                var project_instructions = $("#project_instructions").val()
+                var project_start_date = $("#project_start_date").val()
+                if (!project_name){
+                    alert("请输入项目名称")
+                }
+                else{
+                    $.ajax({
+                       url:'{% url "aliyun:add_project"  %}',
+                       type:'POST',
+                       async:true,
+                       data:{   cloud_type_id:cloud_type_id,
+                                cloud_version_id:cloud_version_id,
+                                project_name:project_name,
+                                project_instructions:project_instructions,
+                                project_start_date:project_start_date
+                            },
+                       timeout:5000,
+                       dataType:'json',
+                       success:function(res)
+                       {
+                       if(res["msg"]=="ok"){
+                              location.reload()
+                              alert('项目：'+$("#project_name").val()+'  '+'已添加成功','成功')
+
+
+                        }
+                       },
+                });
+                }
+            }
+
+
+            $(document).ready(function() {
+
+
+
+            });
+            
+
+        </script>
+	
+        {% endblock %}	
+
