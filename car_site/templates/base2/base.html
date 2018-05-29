@@ -96,55 +96,7 @@
     <script src="/static/vendors/jszip/dist/jszip.min.js"></script>
     <script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
     <script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
-
     
-<style>
-
-.left_col {
-    background: #0c0c0c;
-}
-
-.nav_menu {
-    background: #ffffff;
-}
-
-.nav_title {
-    background: #0c0c0c;;
-}
-
-.site_title i{
-    border: 0px;
-}
-   
-.nav li.current-page {
-        background: rgb(255, 138, 1);
-}
-
-.nav.navbar-nav>li>a {
-    color: #f37327!important;
-}
-
-.nav.side-menu>li.active, .nav.side-menu>li.current-page {
-    border-right: 5px solid #f37327;
-}
-
-#menu_toggle, .left_1, .left_2, .left_3, .left_4{
-    color: #f37327;
-}
-
-.nav-sm .nav.child_menu li.active, .nav-sm .nav.side-menu li.active-sm {
-    border-right: 5px solid #f37327;
-}
-
-td span{
-    line-height: 0px;
-}
-
-a {
-    color: #f1ad4d;
-}
-
-</style>
 
   </head>
 
@@ -159,45 +111,42 @@ a {
           <div class="nav_menu">
             <nav>
               <div class="nav toggle">
-                <a class="click_tag" id="menu_toggle"><i class="fa fa-bars"></i></a>
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
               </div>
 
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="/static/images/aliyun.png" alt="">
-					<span class="user_name">Test</span>
-                    <span class="fa fa-angle-down"></span>
+                    <img src="images/img.jpg" alt="">test
+                    <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
-                    <li><a href="javascript:;" class="department"> Profile</a></li>
+                    <li><a href="javascript:;"> Profile</a></li>
                     <li>
                       <a href="javascript:;">
-                        <span class="badge bg-red pull-right id_info">id_info</span>
-                        <span>ID:</span>
+                        <span class="badge bg-red pull-right">50%</span>
+                        <span>Settings</span>
                       </a>
                     </li>
+                    <li><a href="javascript:;">Help</a></li>
+                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                  </ul>
+                </li>
+
+                <li role="presentation" class="dropdown">
+                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-envelope-o"></i>
+                    <span class="badge bg-green">6</span>
+                  </a>
+                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                   </ul>
                 </li>
               </ul>
             </nav>
           </div>
         </div>
-        <div id="tag" style="display: none">hide</div>
-        <script>
-            $(".click_tag").click(function(){
-                var tag = $("#tag").html()
-                if (tag == "hide"){
-                    $(".aliyun_tag").show()
-                    $("#tag").html("show")
-                }
-                else if (tag == "show"){
-                    $(".aliyun_tag").hide()
-                    $("#tag").html("hide")
-                }
-            });
-        </script>
         <!-- /top navigation -->
+
 
         <!-- page content -->
         <div class="right_col" role="main">
@@ -210,6 +159,7 @@ a {
         <!-- footer content -->
         <footer>
           <div class="pull-right">
+              <a href=# title="扁鹊" target="_blank">系统诊断专家-扁鹊</a>
               http://bianque.aliyun-inc.com/
           </div>
           <div class="clearfix"></div>
@@ -219,6 +169,7 @@ a {
     </div>
 
     <!-- Custom Theme Scripts -->
+    <script src="/static/build/js/custom.min.js"></script>
 
     {% block extrajs %}{% endblock %}		
     
