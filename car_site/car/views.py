@@ -22,6 +22,5 @@ def handle_index(request):
     return render(request,"index/index.html")
 
 @csrf_exempt
-def handle_car_real_time(request):
-    return HttpResponse("test")
-    return render(request,"index/index.html")
+def handle_car_constantly(request):
+    return render(request,"car/car_constantly.html")
