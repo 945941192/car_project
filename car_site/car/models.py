@@ -11,9 +11,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-
 class Axisdata(models.Model):
     ticks = models.IntegerField()
+    carno = models.CharField(db_column='CarNO', max_length=40, blank=True, null=True)  # Field name made lowercase.
     channel = models.IntegerField()
     axisno = models.IntegerField()
     pulse_width = models.IntegerField()
@@ -27,6 +27,7 @@ class Axisdata(models.Model):
 
 class Carphoto(models.Model):
     ticks = models.IntegerField()
+    ticks_read = models.IntegerField(blank=True, null=True)
     carno = models.CharField(db_column='CarNo', max_length=40)  # Field name made lowercase.
     date = models.CharField(db_column='Date', max_length=40)  # Field name made lowercase.
     pathname = models.CharField(db_column='PathName', max_length=500)  # Field name made lowercase.
@@ -39,6 +40,7 @@ class Carphoto(models.Model):
 
 
 class Heartdata(models.Model):
+    temperature = models.IntegerField(blank=True, null=True)
     ticks = models.IntegerField()
     advalue1 = models.IntegerField(db_column='adValue1', blank=True, null=True)  # Field name made lowercase.
     advalue2 = models.IntegerField(db_column='adValue2', blank=True, null=True)  # Field name made lowercase.
@@ -49,12 +51,3 @@ class Heartdata(models.Model):
         managed = False
         db_table = 'HeartData'
 
-
-class DjangoMigrations(models.Model):
-    app = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    applied = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'django_migrations'

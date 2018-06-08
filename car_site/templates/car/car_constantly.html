@@ -35,29 +35,27 @@
                         <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>                         
                             <tr>                            
-                                <th  style="text-align:center;">时间</th>                
+                                <th  style="text-align:center;">拍照时间</th>                
                                 <th  style="text-align:center;">车牌号</th>               
                                 <th  style="text-align:center;">牌照截图</th>               
                                 <th  style="text-align:center;">总重</th>               
                                 <th  style="text-align:center;">车速</th>               
                                 <th  style="text-align:center;">温度</th>            
+                                <th  style="text-align:center;">数据时间</th>            
                             </tr>                           
                             </thead>                                                                  
                             <tbody id="test">                         
-                                {% for task in data %}
+                                {% for obj in car_obj %}
                                 <tr>                            
-                                    <td>{{ user_name }}</td>
-                                    <td>{{ task.task_info }}</td>
-                                    <td>{{ task.time }}</td> 
-                                    <td>
-                                        <div class="progress progress-striped active" style="margin-bottom: 0px;">
-                                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ task.process }}%;">
-                                                    <span>{{ task.process }}</span>
-                                                </div>
-                                        </div>
+                                    <td>{{ obj.photo_time }}</td>
+                                    <td>{{ obj.plate_number }}</td>
+                                    <td>{{ obj.pyoto_path }}
+                                        <img src="/static/test/冀J0R6A3"  style="text-align:center;" alt="system_process-img" class="img-rounded"> 
                                     </td> 
-                                    <td>{{ task.status }}</td> 
-                                    <td>{{ task.error_info }}</td> 
+                                    <td>{{ obj.total_weight }}</td> 
+                                    <td>{{ obj.speed }}</td> 
+                                    <td>{{ obj.temperature }}</td> 
+                                    <td>{{ obj.savedb_time }}</td> 
                                 </tr>                           
                                 {% endfor %}
                             </tbody>                        
