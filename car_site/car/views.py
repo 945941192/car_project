@@ -27,9 +27,9 @@ def handle_car_constantly(request):
     """
         实时数据展示
         {
-            "photo_time":"12345678","plate_number":"冀J0R6A3","photo_paht":"/var/ftp/pub/luo/20180607/冀J0R6A3",
-            "total_weight":"100kg","speed":"80","temperature":"90",
-            "savedb_time":"1992202020",
+            "photo_time":"12345678","plate_number":"冀J0R6A3","photo_paht":"/var/ftp/pub/luo/20180607/冀J0R6A3",        # CarPhoto
+            "total_weight":"100kg","speed":"80","temperature":"90",                                                     # HeartData
+            "savedb_time":"1992202020",                                                                                 # AxisData
             "car_axle1":"80kg",
             "car_axle2":"80kg",
             "car_axle3":"80kg",
@@ -42,19 +42,25 @@ def handle_car_constantly(request):
             "car_axle10":"80kg",
         }
     """
-    car_obj = [{
+    if request.method == "GET":
+        car_obj = [{
                 "photo_time":"12345678","plate_number":"冀J0R6A3","photo_path":"/var/ftp/pub/luo/20180607/冀J0R6A3",
                 "total_weight":"100kg","speed":"80","temperature":"90",
                 "savedb_time":"1992202020",
-                "car_axle1":"80kg",
-                "car_axle2":"80kg",
-                "car_axle3":"80kg",
-                "car_axle4":"80kg",
-                "car_axle5":"80kg",
-                "car_axle6":"80kg",
-                "car_axle7":"80kg",
-                "car_axle8":"80kg",
-                "car_axle9":"80kg",
-                "car_axle10":"80kg",
         }]
-    return render(request,"car/car_constantly.html",{"car_obj":car_obj})
+        return render(request,"car/car_constantly.html",{"car_obj":car_obj})
+
+    elif request.method == "POST":
+        car_obj = [{
+                "photo_time":"12345678","plate_number":"冀J0R6A3","photo_path":"<img src=\"/static/test/冀J0R6A3\"  style=\"text-align:center;width: 100px;\" alt=\"system_process-img\" class=\"img-rounded\">",
+                "total_weight":"100kg","speed":"80","temperature":"90",
+                "savedb_time":"1992202020",
+                }]
+        data ={
+                "draw":1,
+                "recordsTotal":1,
+                "recordsFiltered":1,
+                "data":car_obj
+                }
+        return JsonResponse(data)
+ 

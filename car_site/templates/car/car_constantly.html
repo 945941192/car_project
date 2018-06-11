@@ -76,30 +76,38 @@
         {% block extrajs %}
 		<script type="text/javascript">
 
-    var table = $('#example').DataTable( {
-                                         })
 //    var table = $('#example').DataTable( {
-//        "ajax": {
-//            "url": "",
-//            "type": "POST"
-//        },
-//                    "columnDefs": [
-//                        { "orderable": false, "targets": 0  },
-//                        { "orderable": false, "targets": 1  }
-//                    ],
-//                    "order": [[ 4, 'desc'  ],],
-//                    "createdRow": function( row, data, dataIndex ) {
-//                        $(row).children('td').eq(0).attr('style', 'text-align: center; vertical-align: middle;width:10%')
-//                        $(row).children('td').eq(1).attr('style', 'text-align: center; vertical-align: middle;width:10%')
-//                        $(row).children('td').eq(2).attr('style', 'text-align: center; vertical-align: middle;width:15%')
-//                        $(row).children('td').eq(3).attr('style', 'text-align: center; vertical-align: middle;width:35%')
-//                        $(row).children('td').eq(4).attr('style', 'text-align: center; vertical-align: middle;width:10%')
-//                        $(row).children('td').eq(5).attr('style', 'text-align: center; vertical-align: middle;width:10%')
-//                    },
-//    } );
-//setInterval( function () {
-//    table.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
-//}, 50000 );
+//                                         })
+    var table = $('#example').DataTable( {
+        "ajax": {
+            "url": "",
+            "type": "POST"
+        },
+
+        "columns": [
+            { "data": "photo_time" },
+            { "data": "plate_number" },
+            { "data": "photo_path" },
+            { "data": "total_weight" },
+            { "data": "speed" },
+            { "data": "temperature" },
+            { "data": "savedb_time" }
+        ],
+
+        "createdRow": function( row, data, dataIndex ) {
+            $(row).children('td').eq(0).attr('style', 'text-align: center; vertical-align: middle;width:10%')
+            $(row).children('td').eq(1).attr('style', 'text-align: center; vertical-align: middle;width:10%')
+            $(row).children('td').eq(2).attr('style', 'text-align: center; vertical-align: middle;width:20%')
+            $(row).children('td').eq(3).attr('style', 'text-align: center; vertical-align: middle;width:10%')
+            $(row).children('td').eq(4).attr('style', 'text-align: center; vertical-align: middle;width:10%')
+            $(row).children('td').eq(5).attr('style', 'text-align: center; vertical-align: middle;width:10%')
+            $(row).children('td').eq(6).attr('style', 'text-align: center; vertical-align: middle;width:10%')
+        },
+
+    } );
+setInterval( function () {
+    table.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
+}, 50000 );
 
 
         </script>
