@@ -9,7 +9,7 @@ from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-import os,stat,paramiko,socket,traceback
+import os,stat,socket,traceback
 import subprocess,threading
 import time,datetime
 import base64
@@ -52,15 +52,43 @@ def handle_car_constantly(request):
 
     elif request.method == "POST":
         car_obj = [{
-                "photo_time":"12345678","plate_number":"冀J0R6A3","photo_path":"<img src=\"/static/test/冀J0R6A3\"  style=\"text-align:center;width: 100px;\" alt=\"system_process-img\" class=\"img-rounded\">",
-                "total_weight":"100kg","speed":"80","temperature":"90",
+                "photo_time":"12345678",
+		        "plate_number":"冀J0R6A3",
+	    	    "photo_path":"<img src=\"/static/test/冀J0R6A3\"  style=\"text-align:center;width: 100px;\" alt=\"system_process-img\" class=\"img-rounded\">",
                 "savedb_time":"1992202020",
+                "total_weight1":"100kg",
+                "total_weight2":"100kg",
                 }]
+                    
+        from car.models import Axisdata,Carphoto,Heartdata
+        CarPhoto_set = Carphoto.objects.all().order_by("-id")[:10]
+        Axisdata_set = Axisdata.objects.all()
+        list1 = []
+        for obj in CarPhoto_set:
+            car_line ={
+                    "photo_time":None,
+		            "plate_number":None,
+	    	        "photo_path":None,
+                    "savedb_time":None,
+                    "total_weight1":None,
+                    "total_weight2":None
+                    }
+            car_newest_ticks = Axisdata.objects.filter(carno = obj.carno).order_by('-id')[0].ticks
+            car_info_set =  Axisdata.objects.filter(ticks = car_newest_ticks)
+            car_line["photo_time"] = obj.ticks
+            car_line["plate_number"] = obj.carno
+            car_line["photo_path"] = obj.pathname
+            car_line["savedb_time"] = car_newest_ticks
+            car_line["total_weight1"] = 100
+            car_line["total_weight2"] = 100
+            list1.append(car_line)
+
+    
         data ={
                 "draw":1,
                 "recordsTotal":1,
                 "recordsFiltered":1,
-                "data":car_obj
+                "data":list1
                 }
         return JsonResponse(data)
  

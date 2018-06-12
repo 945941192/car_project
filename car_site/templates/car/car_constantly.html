@@ -38,10 +38,9 @@
                                 <th  style="text-align:center;">拍照时间</th>                
                                 <th  style="text-align:center;">车牌号</th>               
                                 <th  style="text-align:center;">牌照截图</th>               
-                                <th  style="text-align:center;">总重</th>               
-                                <th  style="text-align:center;">车速</th>               
-                                <th  style="text-align:center;">温度</th>            
                                 <th  style="text-align:center;">数据时间</th>            
+                                <th  style="text-align:center;">总重1</th>               
+                                <th  style="text-align:center;">总重2</th>               
                             </tr>                           
                             </thead>                                                                  
                             <tbody id="test">                         
@@ -53,7 +52,6 @@
                                         <img src="/static/test/冀J0R6A3"  style="text-align:center;" alt="system_process-img" class="img-rounded"> 
                                     </td> 
                                     <td>{{ obj.total_weight }}</td> 
-                                    <td>{{ obj.speed }}</td> 
                                     <td>{{ obj.temperature }}</td> 
                                     <td>{{ obj.savedb_time }}</td> 
                                 </tr>                           
@@ -88,10 +86,9 @@
             { "data": "photo_time" },
             { "data": "plate_number" },
             { "data": "photo_path" },
-            { "data": "total_weight" },
-            { "data": "speed" },
-            { "data": "temperature" },
-            { "data": "savedb_time" }
+            { "data": "savedb_time" },
+            { "data": "total_weight1" },
+            { "data": "total_weight2" },
         ],
 
         "createdRow": function( row, data, dataIndex ) {
@@ -101,7 +98,6 @@
             $(row).children('td').eq(3).attr('style', 'text-align: center; vertical-align: middle;width:10%')
             $(row).children('td').eq(4).attr('style', 'text-align: center; vertical-align: middle;width:10%')
             $(row).children('td').eq(5).attr('style', 'text-align: center; vertical-align: middle;width:10%')
-            $(row).children('td').eq(6).attr('style', 'text-align: center; vertical-align: middle;width:10%')
         },
 
     } );
