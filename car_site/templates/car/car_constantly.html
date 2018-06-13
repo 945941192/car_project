@@ -1,6 +1,6 @@
 		
     {% extends 'base2/base.html' %}
-        {% block title %}任务列表{% endblock %}
+        {% block title %}实时数据{% endblock %}
         {% block content %}
 
         <div class="page-title">
@@ -82,6 +82,9 @@
             "type": "POST"
         },
 
+        searching : false,
+        "order": [[ 0, "desc" ]],
+
         "columns": [
             { "data": "photo_time" },
             { "data": "plate_number" },
@@ -103,7 +106,7 @@
     } );
 setInterval( function () {
     table.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
-}, 50000 );
+}, 10000 );
 
 
         </script>

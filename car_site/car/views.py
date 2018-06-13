@@ -15,6 +15,7 @@ import time,datetime
 import base64
 import json
 import re
+import time
 from car.models import Axisdata,Carphoto,Heartdata
 
 @csrf_exempt
@@ -61,10 +62,11 @@ def handle_car_constantly(request):
                 }]
                     
         from car.models import Axisdata,Carphoto,Heartdata
-        CarPhoto_set = Carphoto.objects.all().order_by("-id")[:10]
+        CarPhoto_set = Carphoto.objects.all().order_by("-id")[:5]
         Axisdata_set = Axisdata.objects.all()
         list1 = []
         for obj in CarPhoto_set:
+            print "*"*10,obj.id, "*"*10,obj.carno
             car_line ={
                     "photo_time":None,
 		            "plate_number":None,
@@ -73,21 +75,38 @@ def handle_car_constantly(request):
                     "total_weight1":None,
                     "total_weight2":None
                     }
-            car_newest_ticks = Axisdata.objects.filter(carno = obj.carno).order_by('-id')[0].ticks
+            try:
+                car_newest_ticks = Axisdata.objects.filter(carno = obj.carno).order_by('-id')[0].ticks
+            except Exception as e:
+                time_local = time.localtime(obj.ticks)
+                car_line["photo_time"] = time.strftime("%Y-%m-%d %H:%M:%S",time_local)
+                car_line["plate_number"] = obj.carno
+                car_line["photo_path"] ="<img src=\"{pathname}\"  style=\"text-align:center;width: 100px;\" alt=\"system_process-img\" class=\"img-rounded\">".format(pathname=obj.pathname.replace("/var","/static")),
+                car_line["savedb_time"] = "数据处理中"
+                car_line["total_weight1"] = 100
+                car_line["total_weight2"] = 100
+                list1.append(car_line)
+                print e
+                continue
+
             car_info_set =  Axisdata.objects.filter(ticks = car_newest_ticks)
-            car_line["photo_time"] = obj.ticks
+            time_local = time.localtime(obj.ticks)
+            car_line["photo_time"] = time.strftime("%Y-%m-%d %H:%M:%S",time_local)
+            print "time = ",time.strftime("%Y-%m-%d %H:%M:%S",time_local)
             car_line["plate_number"] = obj.carno
-            car_line["photo_path"] = obj.pathname
-            car_line["savedb_time"] = car_newest_ticks
+            #car_line["photo_path"] = obj.pathname
+            car_line["photo_path"] ="<img src=\"{pathname}\"  style=\"text-align:center;width: 100px;\" alt=\"system_process-img\" class=\"img-rounded\">".format(pathname=obj.pathname.replace("/var","/static")),
+            time_save = time.localtime(car_newest_ticks)
+            car_line["savedb_time"] = time.strftime("%Y-%m-%d %H:%M:%S",time_save)
             car_line["total_weight1"] = 100
             car_line["total_weight2"] = 100
             list1.append(car_line)
 
     
         data ={
-                "draw":1,
-                "recordsTotal":1,
-                "recordsFiltered":1,
+                "draw":5,
+                "recordsTotal":5,
+                "recordsFiltered":5,
                 "data":list1
                 }
         return JsonResponse(data)
