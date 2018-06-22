@@ -15,6 +15,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# get current env infi
+env = os.environ.get("CarEnv")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -85,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'car',
         'USER': 'root',
-        'PASSWORD': 'Sun123456aly',
+        'PASSWORD': 'Sun123456aly' if env != "dev" else "mysql",
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }

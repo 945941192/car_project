@@ -23,91 +23,97 @@ def handle_index(request):
     #return render(request,"index/index.html")
     return HttpResponseRedirect(reverse("car:car_constantly"))
 
+
+def weight1(obj_list):
+    """
+        param:channel:编号为1,2传感器,在同一时间下承受的质量和为  weight1
+        由 轴1 轴2  至  可能到10个轴的 重量和
+        {"zhou1":50,"zhou2":30,"weight1":70}
+    """
+    channel1_n = 1
+    channel2_n = 1
+    channel3_n = 3
+    channel4_n = 4
+    data = {}
+    zhou_name_list = list(set(["zhou%s"%_.axisno for _ in obj_list]))
+    zhou_dict = dict()
+    print zhou_name_list  
+
+    for zhou in zhou_name_list:
+        zhou_weight = list()
+        for _ in obj_list:
+            if (_.channel == 1 or _.channel ==2) and _.axisno == int(zhou.replace("zhou","")):
+                N = eval("channel%s_n"%_.channel)
+                zhou_weight.append(_.sum/N)
+        zhou_dict[zhou] = sum(zhou_weight)
+    zhou_dict["weight1"] = sum([ val for key,val in zhou_dict.items() ])
+
+    return zhou_dict
+
+
 @csrf_exempt
 def handle_car_constantly(request):
     """
         实时数据展示
         {
-            "photo_time":"12345678","plate_number":"冀J0R6A3","photo_paht":"/var/ftp/pub/luo/20180607/冀J0R6A3",        # CarPhoto
-            "total_weight":"100kg","speed":"80","temperature":"90",                                                     # HeartData
-            "savedb_time":"1992202020",                                                                                 # AxisData
-            "car_axle1":"80kg",
-            "car_axle2":"80kg",
-            "car_axle3":"80kg",
-            "car_axle4":"80kg",
-            "car_axle5":"80kg",
-            "car_axle6":"80kg",
-            "car_axle7":"80kg",
-            "car_axle8":"80kg",
-            "car_axle9":"80kg",
-            "car_axle10":"80kg",
+            "photo_time":"08:30:30",
+            "plate_number":"冀J0R6A3",
+            "photo_paht":"/var/ftp/pub/luo/20180607/冀J0R6A3",        # CarPhoto
         }
     """
+    tag = request.GET.get("tag")
+    print "*",tag
+    from car.models import Axisdata,Carphoto,Heartdata
+    obj_list = Axisdata.objects.filter(carno = "鲁NUY093").filter(ticks="1528375405")
+    weight1(obj_list)
+    
     if request.method == "GET":
-        car_obj = [{
-                "photo_time":"12345678","plate_number":"冀J0R6A3","photo_path":"/var/ftp/pub/luo/20180607/冀J0R6A3",
-                "total_weight":"100kg","speed":"80","temperature":"90",
-                "savedb_time":"1992202020",
-        }]
-        return render(request,"car/car_constantly.html",{"car_obj":car_obj})
+        return render(request,"car/car_constantly.html")
 
     elif request.method == "POST":
-        car_obj = [{
-                "photo_time":"12345678",
-		        "plate_number":"冀J0R6A3",
-	    	    "photo_path":"<img src=\"/static/test/冀J0R6A3\"  style=\"text-align:center;width: 100px;\" alt=\"system_process-img\" class=\"img-rounded\">",
-                "savedb_time":"1992202020",
-                "total_weight1":"100kg",
-                "total_weight2":"100kg",
-                }]
-                    
-        from car.models import Axisdata,Carphoto,Heartdata
-        CarPhoto_set = Carphoto.objects.all().order_by("-id")[:5]
-        Axisdata_set = Axisdata.objects.all()
-        list1 = []
-        for obj in CarPhoto_set:
-            print "*"*10,obj.id, "*"*10,obj.carno
-            car_line ={
-                    "photo_time":None,
-		            "plate_number":None,
-	    	        "photo_path":None,
-                    "savedb_time":None,
-                    "total_weight1":None,
-                    "total_weight2":None
-                    }
-            try:
-                car_newest_ticks = Axisdata.objects.filter(carno = obj.carno).order_by('-id')[0].ticks
-            except Exception as e:
+        if tag == "a":            
+            print "*"*100
+            CarPhoto_set = Carphoto.objects.all().order_by("-id")[:5]
+            list1 = []
+            print "2"
+            for obj in CarPhoto_set:
+                print "2.1"
+                car_line ={
+                        "photo_time":None,
+                        "plate_number":None,
+                        "photo_path":None,
+                        }
+                print "2.2"
+
                 time_local = time.localtime(obj.ticks)
-                car_line["photo_time"] = time.strftime("%Y-%m-%d %H:%M:%S",time_local)
+                print "2.3"
+                car_line["photo_time"] = time.strftime("%H:%M:%S",time_local)
                 car_line["plate_number"] = obj.carno
                 car_line["photo_path"] ="<img src=\"{pathname}\"  style=\"text-align:center;width: 100px;\" alt=\"system_process-img\" class=\"img-rounded\">".format(pathname=obj.pathname.replace("/var","/static")),
-                car_line["savedb_time"] = "数据处理中"
-                car_line["total_weight1"] = 100
-                car_line["total_weight2"] = 100
                 list1.append(car_line)
-                print e
-                continue
 
-            car_info_set =  Axisdata.objects.filter(ticks = car_newest_ticks)
-            time_local = time.localtime(obj.ticks)
-            car_line["photo_time"] = time.strftime("%Y-%m-%d %H:%M:%S",time_local)
-            print "time = ",time.strftime("%Y-%m-%d %H:%M:%S",time_local)
-            car_line["plate_number"] = obj.carno
-            #car_line["photo_path"] = obj.pathname
-            car_line["photo_path"] ="<img src=\"{pathname}\"  style=\"text-align:center;width: 100px;\" alt=\"system_process-img\" class=\"img-rounded\">".format(pathname=obj.pathname.replace("/var","/static")),
-            time_save = time.localtime(car_newest_ticks)
-            car_line["savedb_time"] = time.strftime("%Y-%m-%d %H:%M:%S",time_save)
-            car_line["total_weight1"] = 100
-            car_line["total_weight2"] = 100
-            list1.append(car_line)
-
-    
-        data ={
-                "draw":5,
-                "recordsTotal":5,
-                "recordsFiltered":5,
-                "data":list1
-                }
-        return JsonResponse(data)
+            print "3"
+        
+            data ={
+                    "draw":5,
+                    "recordsTotal":5,
+                    "recordsFiltered":5,
+                    "data":list1
+                    }
+            print data
+            print "()"*100
+            return JsonResponse(data)
  
+        elif tag == "b":
+            # 获取AxisData 最新五辆车的数据
+        
+            from car.models import Axisdata
+            new_car_time = list(set([ obj.ticks for obj in  Axisdata.objects.all().order_by("-id")[:100] ]))
+            list2 = list()
+            for i in  new_car_time:
+                obj_list = Axisdata.objects.filter(ticks=i)
+                list2.append(weight1(obj_list))
+            
+            print list2
+            pass
+            return "hello"

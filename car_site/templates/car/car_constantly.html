@@ -4,17 +4,27 @@
         {% block content %}
 
         <div class="page-title">
+            <div class="page-title">
               <div class="title_left">
+                <h3 align="center">智能不停车 称重系统</h3>
               </div>
+
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div id="date1"></div> 
+                </div>
+                </div>
+              </div>
+            </div>
         </div>
 
         <div class="clearfix"></div>
 
         <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h3 align="center" style="float: inherit">智能不停车 称重系统 <small></small></h3>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -26,7 +36,7 @@
                             <li><a class="close-link"><i class="fa fa-close"></i></a>
                             </li>
                         </ul>
-                    <div class="clearfix"></div>
+                        <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
                         <p class="text-muted font-13 m-b-30">
@@ -38,30 +48,53 @@
                                 <th  style="text-align:center;">拍照时间</th>                
                                 <th  style="text-align:center;">车牌号</th>               
                                 <th  style="text-align:center;">牌照截图</th>               
-                                <th  style="text-align:center;">数据时间</th>            
-                                <th  style="text-align:center;">总重1</th>               
-                                <th  style="text-align:center;">总重2</th>               
                             </tr>                           
                             </thead>                                                                  
-                            <tbody id="test">                         
-                                {% for obj in car_obj %}
-                                <tr>                            
-                                    <td>{{ obj.photo_time }}</td>
-                                    <td>{{ obj.plate_number }}</td>
-                                    <td>{{ obj.pyoto_path }}
-                                        <img src="/static/test/冀J0R6A3"  style="text-align:center;" alt="system_process-img" class="img-rounded"> 
-                                    </td> 
-                                    <td>{{ obj.total_weight }}</td> 
-                                    <td>{{ obj.temperature }}</td> 
-                                    <td>{{ obj.savedb_time }}</td> 
-                                </tr>                           
-                                {% endfor %}
-                            </tbody>                        
                         </table>     
 
                   </div>
                 </div>
               </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Basic Tables <small>basic table subtitle</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <table class="table">
+                      <thead>
+                        <tr>
+                                <th  style="text-align:center;">数据时间</th>            
+                                <th  style="text-align:center;">总重1</th>               
+                                <th  style="text-align:center;">总重2</th>               
+                        </tr>
+                      </thead>
+                    </table>
+
+                  </div>
+                </div>
+              </div>
+
+
+
             </div>
 
             {% endblock %}
@@ -74,11 +107,13 @@
         {% block extrajs %}
 		<script type="text/javascript">
 
+
+
 //    var table = $('#example').DataTable( {
 //                                         })
     var table = $('#example').DataTable( {
         "ajax": {
-            "url": "",
+            "url": ""+"?tag=a",
             "type": "POST"
         },
 
@@ -89,24 +124,59 @@
             { "data": "photo_time" },
             { "data": "plate_number" },
             { "data": "photo_path" },
-            { "data": "savedb_time" },
-            { "data": "total_weight1" },
-            { "data": "total_weight2" },
         ],
 
         "createdRow": function( row, data, dataIndex ) {
             $(row).children('td').eq(0).attr('style', 'text-align: center; vertical-align: middle;width:10%')
             $(row).children('td').eq(1).attr('style', 'text-align: center; vertical-align: middle;width:10%')
             $(row).children('td').eq(2).attr('style', 'text-align: center; vertical-align: middle;width:20%')
-            $(row).children('td').eq(3).attr('style', 'text-align: center; vertical-align: middle;width:10%')
-            $(row).children('td').eq(4).attr('style', 'text-align: center; vertical-align: middle;width:10%')
-            $(row).children('td').eq(5).attr('style', 'text-align: center; vertical-align: middle;width:10%')
         },
 
     } );
-setInterval( function () {
-    table.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
-}, 10000 );
+
+    setInterval( function () {
+        table.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
+    }, 100000 );
+
+
+
+
+
+function getTime() {
+
+    var dateObj = new Date();
+
+    var year = dateObj.getFullYear();//年
+    var month = dateObj.getMonth()+1;//月  (注意：月份+1)
+    var date = dateObj.getDate();//日
+    var day = dateObj.getDay();
+    var weeks = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+    var week = weeks[day];//根据day值，获取星期数组中的星期数。
+    var hours = dateObj.getHours();//小时
+    var minutes = dateObj.getMinutes();//分钟
+    var seconds = dateObj.getSeconds();//秒
+
+    if(month<10){
+        month = "0"+month;
+    }
+    if(date<10){
+        date = "0"+date;
+    }
+    if(hours<10){
+        hours = "0"+hours;
+    }
+    if(minutes<10){
+        minutes = "0"+minutes;
+    }
+    if(seconds<10){
+        seconds = "0"+seconds;
+    }
+
+    var newDate = year+"年"+month+"月"+date+"日"+hours+":"+minutes+":"+seconds+"&nbsp &nbsp"+week;
+    document.getElementById("date1").innerHTML = "当前时间：" + newDate;//在div中写入时间
+    setTimeout('getTime()', 500);//每隔500ms执行一次getTime()
+}
+
 
 
         </script>

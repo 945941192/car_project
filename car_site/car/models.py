@@ -25,6 +25,8 @@ class Axisdata(models.Model):
         db_table = 'AxisData'
 
 
+
+
 class Carphoto(models.Model):
     ticks = models.IntegerField()
     ticks_read = models.IntegerField(blank=True, null=True)
