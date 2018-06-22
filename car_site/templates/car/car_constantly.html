@@ -108,7 +108,7 @@
 		<script type="text/javascript">
 
 
-    var table = $('#test2').DataTable( {
+    var table2 = $('#test2').DataTable( {
         "ajax": {
             "url": ""+"?tag=b",
             "type": "POST"
@@ -130,6 +130,10 @@
         },
 
     } );
+
+    setInterval( function () {
+        table2.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
+    }, 10000 );
 
     var table = $('#example').DataTable( {
         "ajax": {
@@ -156,7 +160,7 @@
 
     setInterval( function () {
         table.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
-    }, 100000 );
+    }, 10000 );
 
 
 
