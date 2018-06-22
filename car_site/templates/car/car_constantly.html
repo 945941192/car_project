@@ -79,7 +79,7 @@
                   </div>
                   <div class="x_content">
 
-                    <table class="table">
+                    <table class="table" id="test2">
                       <thead>
                         <tr>
                                 <th  style="text-align:center;">数据时间</th>            
@@ -108,9 +108,29 @@
 		<script type="text/javascript">
 
 
+    var table = $('#test2').DataTable( {
+        "ajax": {
+            "url": ""+"?tag=b",
+            "type": "POST"
+        },
 
-//    var table = $('#example').DataTable( {
-//                                         })
+        searching : false,
+        "order": [[ 0, "desc" ]],
+
+        "columns": [
+            { "data": "save_time" },
+            { "data": "weight1" },
+            { "data": "weight2" },
+        ],
+
+        "createdRow": function( row, data, dataIndex ) {
+            $(row).children('td').eq(0).attr('style', 'text-align: center; vertical-align: middle;width:10%')
+            $(row).children('td').eq(1).attr('style', 'text-align: center; vertical-align: middle;width:10%')
+            $(row).children('td').eq(2).attr('style', 'text-align: center; vertical-align: middle;width:20%')
+        },
+
+    } );
+
     var table = $('#example').DataTable( {
         "ajax": {
             "url": ""+"?tag=a",
@@ -173,7 +193,7 @@ function getTime() {
     }
 
     var newDate = year+"年"+month+"月"+date+"日"+hours+":"+minutes+":"+seconds+"&nbsp &nbsp"+week;
-    document.getElementById("date1").innerHTML = "当前时间：" + newDate;//在div中写入时间
+    document.getElementById("date1").innerHTML = newDate;//在div中写入时间
     setTimeout('getTime()', 500);//每隔500ms执行一次getTime()
 }
 

@@ -17,6 +17,7 @@ import json
 import re
 import time
 from car.models import Axisdata,Carphoto,Heartdata
+import os
 
 @csrf_exempt
 def handle_index(request):
@@ -30,10 +31,13 @@ def weight1(obj_list):
         由 轴1 轴2  至  可能到10个轴的 重量和
         {"zhou1":50,"zhou2":30,"weight1":70}
     """
-    channel1_n = 1
-    channel2_n = 1
-    channel3_n = 3
-    channel4_n = 4
+    json_name = "channel_conf.json"
+    conf_dir = os.path.dirname(os.path.abspath(__file__)) + "/" + json_name
+    data = json.loads(subprocess.check_output("cat %s"%(conf_dir),shell=True))
+    channel1_n = data.get("channel1")
+    channel2_n = data.get("channel2")
+    channel3_n = data.get("channel3")
+    channel4_n = data.get("channel4")
     data = {}
     zhou_name_list = list(set(["zhou%s"%_.axisno for _ in obj_list]))
     zhou_dict = dict()
@@ -50,6 +54,78 @@ def weight1(obj_list):
 
     return zhou_dict
 
+def weight2(obj_list):
+    """
+        param:channel:编号为1,2传感器,在同一时间下承受的质量和为  weight1
+        由 轴1 轴2  至  可能到10个轴的 重量和
+        {"zhou1":50,"zhou2":30,"weight2":70}
+    """
+    json_name = "channel_conf.json"
+    conf_dir = os.path.dirname(os.path.abspath(__file__)) + "/" + json_name
+    data = json.loads(subprocess.check_output("cat %s"%(conf_dir),shell=True))
+    channel1_n = data.get("channel1")
+    channel2_n = data.get("channel2")
+    channel3_n = data.get("channel3")
+    channel4_n = data.get("channel4")
+    data = {}
+    zhou_name_list = list(set(["zhou%s"%_.axisno for _ in obj_list]))
+    zhou_dict = dict()
+    print zhou_name_list  
+
+    for zhou in zhou_name_list:
+        zhou_weight = list()
+        for _ in obj_list:
+            if (_.channel == 3 or _.channel ==4) and _.axisno == int(zhou.replace("zhou","")):
+                N = eval("channel%s_n"%_.channel)
+                zhou_weight.append(_.sum/N)
+        zhou_dict[zhou] = sum(zhou_weight)
+    zhou_dict["weight2"] = sum([ val for key,val in zhou_dict.items() ])
+
+    return zhou_dict
+
+def get_html_code(weight_info, tag=None, num=None):
+    
+    th_html = "".join([ r'''<th  style="text-align:center;">轴%s</th>'''%(i.replace("zhou",''))  for i in weight_info if "weight" not in i ])
+    td_html = "".join([ r'''<td>%d</td>'''%y  for i,y in weight_info.items() if "weight" not in i ])
+
+    html_table = r'''
+                    <table class="table" id="test2">
+                      <thead>
+                        <tr>
+                        %s
+                        </tr>
+                      </thead>
+                      <tbody>
+                                <tr>
+                                    %s
+                                </tr>
+                      </tbody>
+                    </table>'''%(th_html, td_html)
+
+    html_code = r'''
+<button class="btn btn-round btn-info" data-toggle="modal" data-target=%s>%s</button>
+<div class="modal fade" id=%s tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    轴重
+                </h4>
+            </div>
+            <div class="modal-body">
+            %s
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>'''%("#"+str(num),weight_info["weight%s"%tag],num,html_table)
+    return html_code
 
 @csrf_exempt
 def handle_car_constantly(request):
@@ -72,27 +148,21 @@ def handle_car_constantly(request):
 
     elif request.method == "POST":
         if tag == "a":            
-            print "*"*100
             CarPhoto_set = Carphoto.objects.all().order_by("-id")[:5]
             list1 = []
-            print "2"
             for obj in CarPhoto_set:
-                print "2.1"
                 car_line ={
                         "photo_time":None,
                         "plate_number":None,
                         "photo_path":None,
                         }
-                print "2.2"
 
                 time_local = time.localtime(obj.ticks)
-                print "2.3"
                 car_line["photo_time"] = time.strftime("%H:%M:%S",time_local)
                 car_line["plate_number"] = obj.carno
                 car_line["photo_path"] ="<img src=\"{pathname}\"  style=\"text-align:center;width: 100px;\" alt=\"system_process-img\" class=\"img-rounded\">".format(pathname=obj.pathname.replace("/var","/static")),
                 list1.append(car_line)
 
-            print "3"
         
             data ={
                     "draw":5,
@@ -100,20 +170,62 @@ def handle_car_constantly(request):
                     "recordsFiltered":5,
                     "data":list1
                     }
-            print data
-            print "()"*100
             return JsonResponse(data)
  
         elif tag == "b":
             # 获取AxisData 最新五辆车的数据
+            list1 = []
+            list1 = list()
         
             from car.models import Axisdata
             new_car_time = list(set([ obj.ticks for obj in  Axisdata.objects.all().order_by("-id")[:100] ]))
-            list2 = list()
-            for i in  new_car_time:
+            new_car_time.sort(reverse=True)
+            print new_car_time
+            for i in  new_car_time[:5]:
+                car_line = {
+                    "save_time":None,
+                    "weight1":None,
+                    "weight2":None,
+                    }
                 obj_list = Axisdata.objects.filter(ticks=i)
-                list2.append(weight1(obj_list))
+                weight_info = {"weight1_info":weight1(obj_list),"weight2_info":weight2(obj_list)}
+                print i,weight_info
+                car_line["save_time"] = time.strftime("%H:%M:%S",time.localtime(i))
+                #car_line["weight1"] = weight_info["weight1_info"]["weight1"]
+                #car_line["weight2"] = weight_info["weight2_info"]["weight2"]
+                car_line["weight1"] = get_html_code(weight_info["weight1_info"], tag="1", num=i)
+                car_line["weight2"] = get_html_code(weight_info["weight2_info"], tag="2", num=i)
+                
+                list1.append(car_line)
+          
             
-            print list2
-            pass
-            return "hello"
+            data ={
+                    "draw":5,
+                    "recordsTotal":5,
+                    "recordsFiltered":5,
+                    "data":list1
+                    }
+            return JsonResponse(data)
+
+@csrf_exempt
+def handle_channel_conf(request):
+
+    import subprocess
+    import json
+    if request.method == "GET":
+        channel = request.GET.get("channel1")
+        json_name = "channel_conf.json"
+        conf_dir = os.path.dirname(os.path.abspath(__file__)) + "/" + json_name
+        if not channel:
+            
+            data = json.loads(subprocess.check_output("cat %s"%(conf_dir),shell=True))
+            return render(request,"car/channel_config.html",data)
+        else:
+            channel1 = int(request.GET.get("channel1"))
+            channel2 = int(request.GET.get("channel2"))
+            channel3 = int(request.GET.get("channel3"))
+            channel4 = int(request.GET.get("channel4"))
+            channel_conf_json = {"channel1":channel1,"channel2":channel2,"channel3":channel3,"channel4":channel4}
+            open(conf_dir,"w").write(json.dumps(channel_conf_json))
+            return HttpResponseRedirect(reverse("car:channel_conf"))
+

@@ -1,0 +1,120 @@
+		
+    {% extends 'base2/base.html' %}
+        {% block title %}实时数据{% endblock %}
+        {% block content %}
+
+        <div class="page-title">
+            <div class="page-title">
+              <div class="title_left">
+                <h3 align="center">智能不停车 称重系统</h3>
+              </div>
+
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div id="date1"></div> 
+                </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Form Design <small>different form elements</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <br />
+
+
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name"> 传感器 <span class="required"></span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name"> 定标系数</label>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">传感器1 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="channel1" name="channel1" required="required" class="form-control col-md-4 col-xs-12">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">传感器2 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="channel2" name="channel2" required="required" class="form-control col-md-4 col-xs-12">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">传感器3 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="channel3" name="channel3" required="required" class="form-control col-md-4 col-xs-12">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">传感器4 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="channel4"  name="channel4" required="required" class="form-control col-md-4 col-xs-12">
+                        </div>
+                      </div>
+
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                          <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+
+                    </form>
+
+
+
+                  </div>
+                </div>
+
+
+
+
+
+        </div>
+
+            {% endblock %}
+
+
+		
+
+
+
+        {% block extrajs %}
+		<script type="text/javascript">
+        $("#channel1").val({{channel1}})
+        $("#channel2").val({{channel2}})
+        $("#channel3").val({{channel3}})
+        $("#channel4").val({{channel4}})
+
+
+
+        </script>
+	
+        {% endblock %}	
+
