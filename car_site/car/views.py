@@ -84,9 +84,10 @@ def weight2(obj_list):
     return zhou_dict
 
 def get_html_code(weight_info, tag=None, num=None):
-    
+    print "weight_info",weight_info
     th_html = "".join([ r'''<th  style="text-align:center;">轴%s</th>'''%(i.replace("zhou",''))  for i in weight_info if "weight" not in i ])
     td_html = "".join([ r'''<td>%d</td>'''%y  for i,y in weight_info.items() if "weight" not in i ])
+    print "td_htlm====", td_html
 
     html_table = r'''
                     <table class="table" id="test2">
@@ -124,7 +125,7 @@ def get_html_code(weight_info, tag=None, num=None):
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
-</div>'''%("#"+str(num),weight_info["weight%s"%tag],num,html_table)
+</div>'''%("#"+str(num)+str(tag),weight_info["weight%s"%tag],str(num)+str(tag),html_table)
     return html_code
 
 @csrf_exempt
@@ -195,7 +196,6 @@ def handle_car_constantly(request):
                 #car_line["weight2"] = weight_info["weight2_info"]["weight2"]
                 car_line["weight1"] = get_html_code(weight_info["weight1_info"], tag="1", num=i)
                 car_line["weight2"] = get_html_code(weight_info["weight2_info"], tag="2", num=i)
-                
                 list1.append(car_line)
           
             
