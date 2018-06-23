@@ -48,7 +48,7 @@ def weight1(obj_list):
         for _ in obj_list:
             if (_.channel == 1 or _.channel ==2) and _.axisno == int(zhou.replace("zhou","")):
                 N = eval("channel%s_n"%_.channel)
-                zhou_weight.append(_.sum/N)
+                zhou_weight.append(round(_.sum/N, 2))
         zhou_dict[zhou] = sum(zhou_weight)
     zhou_dict["weight1"] = sum([ val for key,val in zhou_dict.items() ])
 
@@ -221,10 +221,10 @@ def handle_channel_conf(request):
             data = json.loads(subprocess.check_output("cat %s"%(conf_dir),shell=True))
             return render(request,"car/channel_config.html",data)
         else:
-            channel1 = int(request.GET.get("channel1"))
-            channel2 = int(request.GET.get("channel2"))
-            channel3 = int(request.GET.get("channel3"))
-            channel4 = int(request.GET.get("channel4"))
+            channel1 = float(request.GET.get("channel1"))
+            channel2 = float(request.GET.get("channel2"))
+            channel3 = float(request.GET.get("channel3"))
+            channel4 = float(request.GET.get("channel4"))
             channel_conf_json = {"channel1":channel1,"channel2":channel2,"channel3":channel3,"channel4":channel4}
             open(conf_dir,"w").write(json.dumps(channel_conf_json))
             return HttpResponseRedirect(reverse("car:channel_conf"))
